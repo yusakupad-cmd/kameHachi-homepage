@@ -15,19 +15,37 @@ database_id   = "YOUR_D1_DATABASE_ID"
 # YouTube チャンネルID: https://www.youtube.com/channel/XXXX の XXXX 部分
 YOUTUBE_CHANNEL_ID = "YOUR_YOUTUBE_CHANNEL_ID"
 
-# 将来追加:
-# INSTAGRAM_ACCESS_TOKEN  = "" # Instagram Graph API アクセストークン
-# LINE_HARNESS_API_URL    = "" # line-harness-oss Worker URL
-# LINE_HARNESS_API_KEY    = "" # line-harness-oss 認証キー (wrangler secret put で設定)
+# Notion: wrangler secret put NOTION_API_KEY で安全に設定する
+# NOTION_API_KEY は secret のため wrangler.toml に書かない
+
+# Notion お知らせDB のデータベースID (URLの32桁の英数字)
+NOTION_NEWS_DB_ID = "YOUR_NOTION_NEWS_DB_ID"
+
+# Notion ブログDB のデータベースID
+NOTION_BLOG_DB_ID = "YOUR_NOTION_BLOG_DB_ID"
 
 # ── Cron スケジュール ─────────────────────────────────────────────
 [triggers]
-crons = ["0 * * * *"]  # 毎時0分に YouTube RSS を同期
+crons = ["0 * * * *"]  # 毎時0分に YouTube + Notion を同期
 
 # ── デプロイ手順 ──────────────────────────────────────────────────
 # 1. wrangler d1 create kame-social
 # 2. 上記の database_id を更新
 # 3. wrangler d1 execute kame-social --file=schema.sql
-# 4. wrangler.toml の YOUTUBE_CHANNEL_ID を実際のIDに更新
-# 5. wrangler deploy
-# 6. index.html の WORKER_URL を https://kame-social-feed.<subdomain>.workers.dev に更新
+# 4. wrangler secret put NOTION_API_KEY   ← Notion インテグレーションのシークレット
+# 5. wrangler.toml の各IDを実際の値に更新
+# 6. wrangler deploy
+# 7. index.html の WORKER_BASE を https://kame-social-feed.<subdomain>.workers.dev に更新
+
+# ── Notion DB プロパティ定義 ──────────────────────────────────────
+# お知らせDB:
+#   Title    (title)    ← ページタイトル
+#   Date     (date)     ← 公開日
+#   Category (select)   ← "お知らせ" / "イベント"
+#   Published(checkbox) ← チェック = 公開
+#
+# ブログDB:
+#   Title    (title)    ← ページタイトル
+#   Date     (date)     ← 投稿日
+#   Published(checkbox) ← チェック = 公開
+#   カバー画像はページカバー (page.cover) を使用

@@ -619,6 +619,55 @@ nav {
 .btn-yt::before { content: '▶'; font-size: 10px; }
 .youtube-btn-wrap { text-align: center; }
 
+/* ══ NEWS + BLOG ══ */
+.nb-section { background: var(--bg-section); padding: 64px 48px; }
+.nb-inner { max-width: 960px; margin: 0 auto; }
+.nb-tab-bar { display: flex; border-bottom: 1px solid rgba(160,128,96,0.2); margin-bottom: 28px; }
+.nb-tab {
+  padding: 10px 24px; font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+  color: var(--text-lt); cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.nb-tab.active { color: var(--green); border-bottom-color: var(--green); }
+.nb-tab:hover:not(.active) { color: var(--text-md); }
+.nb-pane { display: none; }
+.nb-pane.active { display: block; }
+.nb-news-list { list-style: none; }
+.nb-news-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid rgba(160,128,96,0.1);
+}
+.nb-news-item:last-child { border-bottom: none; }
+.nb-news-date { font-size: 10px; color: var(--text-lt); letter-spacing: 0.08em; min-width: 68px; padding-top: 3px; white-space: nowrap; }
+.nb-cat {
+  font-size: 9px; padding: 2px 8px 3px; border-radius: 3px; white-space: nowrap;
+  font-weight: 500; letter-spacing: 0.06em; min-width: 48px; text-align: center; flex-shrink: 0;
+}
+.nb-cat-event  { background: rgba(192,112,64,.12); color: var(--orange); }
+.nb-cat-notice { background: rgba(74,103,65,.10);  color: var(--green); }
+.nb-news-title { font-size: 12px; color: var(--text-dk); line-height: 1.7; letter-spacing: 0.05em; }
+.nb-blog-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+.nb-blog-card {
+  background: var(--bg-card); border-radius: var(--radius-card); overflow: hidden;
+  box-shadow: var(--shadow-card); text-decoration: none; transition: transform .18s; display: block;
+}
+.nb-blog-card:hover { transform: translateY(-3px); }
+.nb-blog-thumb { aspect-ratio: 3/2; overflow: hidden; }
+.nb-blog-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nb-blog-thumb-empty {
+  aspect-ratio: 3/2; background: linear-gradient(135deg,var(--bg-accent),var(--green-pale));
+  display: flex; align-items: center; justify-content: center;
+}
+.nb-blog-thumb-empty span { font-size: 9px; color: var(--text-lt); letter-spacing: .1em; }
+.nb-blog-info { padding: 12px 14px 16px; }
+.nb-blog-date { font-size: 9px; color: var(--text-lt); margin-bottom: 6px; letter-spacing: 0.06em; }
+.nb-blog-title { font-size: 12px; color: var(--text-dk); font-weight: 500; line-height: 1.65; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.nb-skel-line { height: 10px; border-radius: 4px; background: var(--bg-accent); animation: ytpulse 1.6s ease-in-out infinite; margin: 6px 0; }
+.nb-skel-line.s { width: 55%; }
+.nb-skel-thumb { background: linear-gradient(135deg,var(--bg-accent),var(--green-pale)); animation: ytpulse 1.6s ease-in-out infinite; }
+.nb-more { display: block; text-align: right; font-size: 10px; color: var(--green); letter-spacing: 0.1em; margin-top: 16px; text-decoration: none; }
+.nb-more:hover { text-decoration: underline; }
+
 /* ══ CONTACT ══ */
 .contact-section { background: var(--bg-section); padding: 80px 48px 64px; }
 .contact-inner { max-width: 960px; margin: 0 auto; }
@@ -741,8 +790,10 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
   .flow-section,
   .insta-section,
   .youtube-section,
+  .nb-section,
   .contact-section { padding: 48px 20px; }
   .youtube-grid { grid-template-columns: 1fr; }
+  .nb-blog-grid { grid-template-columns: 1fr; }
   footer { padding: 32px 20px 20px; }
 }
 </style>
@@ -935,6 +986,67 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
           <span class="btn-more">詳しく見る</span>
         </div>
       </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ NEWS + BLOG ══ -->
+<section class="nb-section">
+  <div class="nb-inner">
+    <div class="deco-title">
+      <span class="deco-mark">✦</span>
+      <h2>お知らせ・日々の記録</h2>
+      <span class="sub-ja">Notionで更新 · 最新情報をお届けします</span>
+    </div>
+    <div class="nb-tab-bar">
+      <div class="nb-tab active" data-tab="news">お知らせ</div>
+      <div class="nb-tab" data-tab="blog">スタッフブログ</div>
+    </div>
+
+    <!-- お知らせ pane -->
+    <div id="nb-pane-news" class="nb-pane active">
+      <ul id="nb-news-list" class="nb-news-list">
+        <li class="nb-news-item">
+          <span class="nb-news-date">&nbsp;</span>
+          <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
+          <span class="nb-skel-line" style="flex:1"></span>
+        </li>
+        <li class="nb-news-item">
+          <span class="nb-news-date">&nbsp;</span>
+          <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
+          <span class="nb-skel-line" style="flex:1"></span>
+        </li>
+        <li class="nb-news-item">
+          <span class="nb-news-date">&nbsp;</span>
+          <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
+          <span class="nb-skel-line" style="flex:1"></span>
+        </li>
+      </ul>
+      <!-- TODO: Notion お知らせDBの全件ページURLに置き換える -->
+      <a class="nb-more" id="nb-news-more" href="#">すべてのお知らせ →</a>
+    </div>
+
+    <!-- ブログ pane -->
+    <div id="nb-pane-blog" class="nb-pane">
+      <div id="nb-blog-grid" class="nb-blog-grid">
+        <div class="nb-blog-card" style="pointer-events:none">
+          <div class="nb-blog-thumb nb-skel-thumb" style="aspect-ratio:3/2"></div>
+          <div class="nb-blog-info">
+            <div class="nb-skel-line s"></div>
+            <div class="nb-skel-line"></div>
+          </div>
+        </div>
+        <div class="nb-blog-card" style="pointer-events:none">
+          <div class="nb-blog-thumb nb-skel-thumb" style="aspect-ratio:3/2"></div>
+          <div class="nb-blog-info">
+            <div class="nb-skel-line s"></div>
+            <div class="nb-skel-line"></div>
+          </div>
+        </div>
+      </div>
+      <!-- TODO: Notion ブログDBの全件ページURLに置き換える -->
+      <a class="nb-more" id="nb-blog-more" href="#">すべての記事 →</a>
     </div>
   </div>
 </section>
@@ -1196,6 +1308,77 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     .then(function(r) { return r.json(); })
     .then(renderCards)
     .catch(function() { /* Worker 未接続時はスケルトンをそのまま表示 */ });
+})();
+
+// ── お知らせ + ブログ統合セクション ─────────────────────────────────
+(function() {
+  var WORKER_BASE = 'https://kame-social-feed.YOUR_SUBDOMAIN.workers.dev';
+
+  // タブ切り替え
+  document.querySelectorAll('.nb-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.getAttribute('data-tab');
+      document.querySelectorAll('.nb-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.nb-pane').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      document.getElementById('nb-pane-' + target).classList.add('active');
+    });
+  });
+
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+  function fmtDate(s) {
+    var d = new Date(s);
+    return d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate());
+  }
+  function catClass(cat) {
+    return cat === 'イベント' ? 'nb-cat-event' : 'nb-cat-notice';
+  }
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // お知らせ
+  function renderNews(items) {
+    var list = document.getElementById('nb-news-list');
+    if (!list || !items.length) return;
+    list.innerHTML = items.slice(0, 5).map(function(item) {
+      var cat = item.category || 'お知らせ';
+      return '<li class="nb-news-item">' +
+        '<span class="nb-news-date">' + fmtDate(item.date) + '</span>' +
+        '<span class="nb-cat ' + catClass(cat) + '">' + esc(cat) + '</span>' +
+        '<span class="nb-news-title">' + esc(item.title) + '</span>' +
+      '</li>';
+    }).join('');
+  }
+
+  // ブログ
+  function renderBlog(items) {
+    var grid = document.getElementById('nb-blog-grid');
+    if (!grid || !items.length) return;
+    grid.innerHTML = items.slice(0, 4).map(function(item) {
+      var thumb = item.cover_url
+        ? '<div class="nb-blog-thumb"><img src="' + esc(item.cover_url) + '" alt="' + esc(item.title) + '" loading="lazy"></div>'
+        : '<div class="nb-blog-thumb nb-blog-thumb-empty"><span>写真</span></div>';
+      var url = item.notion_url || '#';
+      return '<a class="nb-blog-card" href="' + esc(url) + '" target="_blank" rel="noopener">' +
+        thumb +
+        '<div class="nb-blog-info">' +
+          '<div class="nb-blog-date">' + fmtDate(item.date) + '</div>' +
+          '<div class="nb-blog-title">' + esc(item.title) + '</div>' +
+        '</div>' +
+      '</a>';
+    }).join('');
+  }
+
+  fetch(WORKER_BASE + '/api/news')
+    .then(function(r) { return r.json(); })
+    .then(renderNews)
+    .catch(function() {});
+
+  fetch(WORKER_BASE + '/api/blog')
+    .then(function(r) { return r.json(); })
+    .then(renderBlog)
+    .catch(function() {});
 })();
 </script>
 </body>
