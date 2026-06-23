@@ -1,0 +1,33 @@
+name            = "kame-social-feed"
+main            = "social-feed.js"
+compatibility_date = "2024-09-23"
+
+# ── D1 データベース ────────────────────────────────────────────────
+# 作成コマンド: wrangler d1 create kame-social
+# → 表示される database_id を下記に貼り付ける
+[[d1_databases]]
+binding       = "DB"
+database_name = "kame-social"
+database_id   = "YOUR_D1_DATABASE_ID"
+
+# ── 環境変数 ───────────────────────────────────────────────────────
+[vars]
+# YouTube チャンネルID: https://www.youtube.com/channel/XXXX の XXXX 部分
+YOUTUBE_CHANNEL_ID = "YOUR_YOUTUBE_CHANNEL_ID"
+
+# 将来追加:
+# INSTAGRAM_ACCESS_TOKEN  = "" # Instagram Graph API アクセストークン
+# LINE_HARNESS_API_URL    = "" # line-harness-oss Worker URL
+# LINE_HARNESS_API_KEY    = "" # line-harness-oss 認証キー (wrangler secret put で設定)
+
+# ── Cron スケジュール ─────────────────────────────────────────────
+[triggers]
+crons = ["0 * * * *"]  # 毎時0分に YouTube RSS を同期
+
+# ── デプロイ手順 ──────────────────────────────────────────────────
+# 1. wrangler d1 create kame-social
+# 2. 上記の database_id を更新
+# 3. wrangler d1 execute kame-social --file=schema.sql
+# 4. wrangler.toml の YOUTUBE_CHANNEL_ID を実際のIDに更新
+# 5. wrangler deploy
+# 6. index.html の WORKER_URL を https://kame-social-feed.<subdomain>.workers.dev に更新
