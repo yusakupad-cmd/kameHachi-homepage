@@ -19,10 +19,10 @@ YOUTUBE_CHANNEL_ID = "YOUR_YOUTUBE_CHANNEL_ID"
 # NOTION_API_KEY は secret のため wrangler.toml に書かない
 
 # Notion お知らせDB のデータベースID (URLの32桁の英数字)
-NOTION_NEWS_DB_ID = "YOUR_NOTION_NEWS_DB_ID"
+NOTION_NEWS_DB_ID = "f3ddd492f8b646359663bdff8458b915"
 
 # Notion ブログDB のデータベースID
-NOTION_BLOG_DB_ID = "YOUR_NOTION_BLOG_DB_ID"
+NOTION_BLOG_DB_ID = "d8d080e5b329488683a9bc4355b5ea27"
 
 # ── Cron スケジュール ─────────────────────────────────────────────
 [triggers]

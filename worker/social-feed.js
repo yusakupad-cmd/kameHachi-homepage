@@ -122,7 +122,7 @@ async function syncNotionNews(env) {
 
   const data = await queryNotion(env, dbId,
     [{ property: 'Date', direction: 'descending' }],
-    { property: 'Published', checkbox: { equals: true } }
+    { property: '公開', checkbox: { equals: true } }
   );
 
   await env.DB.prepare('DELETE FROM notion_news').run();
@@ -130,9 +130,9 @@ async function syncNotionNews(env) {
     'INSERT INTO notion_news (notion_id, title, date, category) VALUES (?, ?, ?, ?)'
   );
   for (const page of data.results ?? []) {
-    const title = page.properties.Title?.title?.[0]?.plain_text ?? '';
-    const date  = page.properties.Date?.date?.start ?? '';
-    const cat   = page.properties.Category?.select?.name ?? 'お知らせ';
+    const title = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
+    const date  = page.properties['公開日']?.date?.start ?? '';
+    const cat   = page.properties['カテゴリ']?.select?.name ?? 'お知らせ';
     if (title && date) await stmt.bind(page.id, title, date, cat).run();
   }
 }
@@ -152,7 +152,7 @@ async function syncNotionBlog(env) {
 
   const data = await queryNotion(env, dbId,
     [{ property: 'Date', direction: 'descending' }],
-    { property: 'Published', checkbox: { equals: true } }
+    { property: '公開', checkbox: { equals: true } }
   );
 
   await env.DB.prepare('DELETE FROM notion_blog').run();
@@ -160,8 +160,8 @@ async function syncNotionBlog(env) {
     'INSERT INTO notion_blog (notion_id, title, date, cover_url, notion_url) VALUES (?, ?, ?, ?, ?)'
   );
   for (const page of data.results ?? []) {
-    const title    = page.properties.Title?.title?.[0]?.plain_text ?? '';
-    const date     = page.properties.Date?.date?.start ?? '';
+    const title    = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
+    const date     = page.properties['投稿日']?.date?.start ?? '';
     const coverUrl = page.cover?.type === 'file'     ? page.cover.file.url
                    : page.cover?.type === 'external' ? page.cover.external.url : '';
     const notionUrl = page.url ?? '';
