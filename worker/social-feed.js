@@ -2,12 +2,14 @@
  * kame-social-feed — Cloudflare Worker
  *
  * エンドポイント:
- *   GET /api/feed/youtube   → YouTube 最新4件
- *   GET /api/news           → Notion お知らせ 最新5件
- *   GET /api/blog           → Notion ブログ 最新4件
+ *   GET /api/feed/youtube    → YouTube 最新4件
+ *   GET /api/feed/instagram  → Instagram 最新9件
+ *   GET /api/news            → line-harness-oss お知らせ 最新5件（リアルタイムプロキシ）
+ *   GET /api/blog            → Notion ブログ 最新4件
  *
  * Cron (wrangler.toml で設定):
- *   毎時0分 → YouTube RSS + Notion DB を D1 に同期
+ *   毎時0分 → YouTube RSS + Instagram Graph API を D1 に同期
+ *   ※お知らせは line-harness /api/public/news をリアルタイム fetch するため同期不要
  */
 
 const CORS_HEADERS = {
@@ -20,7 +22,8 @@ export default {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(Promise.all([
       syncYouTube(env),
-      syncNotionNews(env),
+      syncInstagram(env),
+      // お知らせは line-harness /api/public/news をリアルタイム fetch するため同期不要
     ]));
   },
 
@@ -31,10 +34,11 @@ export default {
 
     const { pathname } = new URL(request.url);
 
-    if (pathname === '/api/feed/youtube') return handleYouTubeFeed(env);
-    if (pathname === '/api/news')         return handleNotionNews(env);
-    if (pathname === '/api/blog')         return handleNotionBlog(env);
-    if (pathname === '/api/sync')         return handleSync(env);
+    if (pathname === '/api/feed/youtube')    return handleYouTubeFeed(env);
+    if (pathname === '/api/feed/instagram')  return handleInstagramFeed(env);
+    if (pathname === '/api/news')            return handleNotionNews(env);
+    if (pathname === '/api/blog')            return handleNotionBlog(env);
+    if (pathname === '/api/sync')            return handleSync(env);
 
     return new Response(JSON.stringify({ error: 'Not found' }), {
       status: 404,
@@ -47,7 +51,7 @@ export default {
 
 async function handleSync(env) {
   try {
-    await Promise.all([syncYouTube(env), syncNotionNews(env)]);
+    await Promise.all([syncYouTube(env), syncInstagram(env)]);
     return new Response(JSON.stringify({ ok: true, synced_at: new Date().toISOString() }), { headers: CORS_HEADERS });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: e.message }), { status: 500, headers: CORS_HEADERS });
@@ -109,6 +113,45 @@ function decodeXmlEntities(s) {
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 }
 
+// ── Instagram ──────────────────────────────────────────────────────
+
+async function syncInstagram(env) {
+  const token = env.INSTAGRAM_ACCESS_TOKEN;
+  if (!token) return;
+
+  const fields = 'id,media_type,media_url,thumbnail_url,permalink,caption,timestamp';
+  const res = await fetch(
+    `https://graph.instagram.com/v22.0/me/media?fields=${fields}&limit=12&access_token=${token}`,
+    { headers: { 'User-Agent': 'kame-social-feed/1.0' } }
+  );
+  if (!res.ok) return;
+
+  const json = await res.json();
+  const posts = (json.data ?? [])
+    .filter(p => {
+      if (p.media_type === 'IMAGE' || p.media_type === 'CAROUSEL_ALBUM') return !!p.media_url;
+      if (p.media_type === 'VIDEO') return !!p.thumbnail_url;
+      return false;
+    })
+    .slice(0, 9);
+
+  await env.DB.prepare('DELETE FROM instagram_posts').run();
+  const stmt = env.DB.prepare(
+    'INSERT INTO instagram_posts (media_id, media_type, media_url, caption, permalink, timestamp) VALUES (?, ?, ?, ?, ?, ?)'
+  );
+  for (const p of posts) {
+    const mediaUrl = p.media_type === 'VIDEO' ? p.thumbnail_url : p.media_url;
+    await stmt.bind(p.id, p.media_type, mediaUrl, p.caption ?? '', p.permalink, p.timestamp).run();
+  }
+}
+
+async function handleInstagramFeed(env) {
+  const { results } = await env.DB.prepare(
+    'SELECT media_id, media_type, media_url, caption, permalink, timestamp FROM instagram_posts ORDER BY timestamp DESC LIMIT 9'
+  ).all();
+  return new Response(JSON.stringify(results ?? []), { headers: CORS_HEADERS });
+}
+
 // ── Notion 共通 ────────────────────────────────────────────────────
 
 async function queryNotion(env, dbId, sorts, filter) {
@@ -128,39 +171,38 @@ async function queryNotion(env, dbId, sorts, filter) {
   return res.json();
 }
 
-// ── Notion お知らせ ────────────────────────────────────────────────
-
-async function syncNotionNews(env) {
-  const dbId = env.NOTION_NEWS_DB_ID;
-  if (!dbId || dbId === 'YOUR_NOTION_NEWS_DB_ID') return;
-
-  const data = await queryNotion(env, dbId,
-    [{ property: '公開日', direction: 'descending' }],
-    { property: '公開', checkbox: { equals: true } }
-  );
-
-  await env.DB.prepare('DELETE FROM notion_news').run();
-  const stmt = env.DB.prepare(
-    'INSERT INTO notion_news (notion_id, title, date, category, notion_url, cover_url) VALUES (?, ?, ?, ?, ?, ?)'
-  );
-  for (const page of data.results ?? []) {
-    const title      = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
-    const date       = page.properties['公開日']?.date?.start ?? '';
-    const cat        = page.properties['カテゴリ']?.select?.name ?? 'お知らせ';
-    const subdomain  = env.NOTION_SITE_SUBDOMAIN || '';
-    const pageId     = page.id.replace(/-/g, '');
-    const notionUrl  = subdomain ? `https://${subdomain}.notion.site/${pageId}` : '';
-    const coverUrl   = page.cover?.type === 'file'     ? page.cover.file.url
-                     : page.cover?.type === 'external' ? page.cover.external.url : '';
-    if (title && date) await stmt.bind(page.id, title, date, cat, notionUrl, coverUrl).run();
-  }
-}
+// ── お知らせ（line-harness-oss /api/public/news プロキシ） ─────────
+//
+// Notion→D1同期を廃止し、line-harness-ossのお知らせCRUDを正としてプロキシする。
+// HP側のrenderNews()が期待するフィールド形式に変換して返す。
+//   HP期待: [{ notion_id, title, date, category, notion_url, cover_url }]
+//   line-harness形式: { success, data: [{ id, title, category, publishedAt, content, ... }] }
 
 async function handleNotionNews(env) {
-  const { results } = await env.DB.prepare(
-    'SELECT notion_id, title, date, category, notion_url, cover_url FROM notion_news ORDER BY date DESC LIMIT 5'
-  ).all();
-  return new Response(JSON.stringify(results ?? []), { headers: CORS_HEADERS });
+  const baseUrl = env.LINE_HARNESS_URL || 'https://line-harness.kizuku-lab.workers.dev';
+  try {
+    const res = await fetch(`${baseUrl}/api/public/news`, {
+      headers: { 'User-Agent': 'kame-social-feed/1.0' },
+    });
+    if (!res.ok) throw new Error(`upstream ${res.status}`);
+    const json = await res.json();
+    const items = (json.data ?? []).slice(0, 5).map(item => ({
+      notion_id:  item.id,
+      title:      item.title,
+      date:       (item.publishedAt || item.createdAt || '').slice(0, 10),
+      category:   item.category || 'お知らせ',
+      notion_url: '',    // 記事詳細URLなし（管理はダッシュボードで行う）
+      cover_url:  '',    // カバー画像なし
+    }));
+    return new Response(JSON.stringify(items), { headers: CORS_HEADERS });
+  } catch (e) {
+    // upstream障害時はD1キャッシュから返すフォールバック
+    console.error('[kame-social-feed] /api/news upstream fetch failed:', e?.message ?? String(e));
+    const { results } = await env.DB.prepare(
+      'SELECT notion_id, title, date, category, notion_url, cover_url FROM notion_news ORDER BY date DESC LIMIT 5'
+    ).all();
+    return new Response(JSON.stringify(results ?? []), { headers: CORS_HEADERS });
+  }
 }
 
 // ── Notion ブログ ──────────────────────────────────────────────────
