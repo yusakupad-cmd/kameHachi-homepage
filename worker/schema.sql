@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS notion_news (
   title      TEXT     NOT NULL,
   date       TEXT     NOT NULL,
   category   TEXT     NOT NULL DEFAULT 'お知らせ',
+  notion_url TEXT     DEFAULT '',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

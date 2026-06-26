@@ -127,19 +127,20 @@ async function syncNotionNews(env) {
 
   await env.DB.prepare('DELETE FROM notion_news').run();
   const stmt = env.DB.prepare(
-    'INSERT INTO notion_news (notion_id, title, date, category) VALUES (?, ?, ?, ?)'
+    'INSERT INTO notion_news (notion_id, title, date, category, notion_url) VALUES (?, ?, ?, ?, ?)'
   );
   for (const page of data.results ?? []) {
-    const title = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
-    const date  = page.properties['公開日']?.date?.start ?? '';
-    const cat   = page.properties['カテゴリ']?.select?.name ?? 'お知らせ';
-    if (title && date) await stmt.bind(page.id, title, date, cat).run();
+    const title     = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
+    const date      = page.properties['公開日']?.date?.start ?? '';
+    const cat       = page.properties['カテゴリ']?.select?.name ?? 'お知らせ';
+    const notionUrl = page.url ?? '';
+    if (title && date) await stmt.bind(page.id, title, date, cat, notionUrl).run();
   }
 }
 
 async function handleNotionNews(env) {
   const { results } = await env.DB.prepare(
-    'SELECT notion_id, title, date, category FROM notion_news ORDER BY date DESC LIMIT 5'
+    'SELECT notion_id, title, date, category, notion_url FROM notion_news ORDER BY date DESC LIMIT 5'
   ).all();
   return new Response(JSON.stringify(results ?? []), { headers: CORS_HEADERS });
 }
