@@ -13,10 +13,19 @@ database_id   = "532d44be-2c1e-4112-bca8-7ec0f5f46d13"
 # ── 環境変数 ───────────────────────────────────────────────────────
 [vars]
 # YouTube チャンネルID: https://www.youtube.com/channel/XXXX の XXXX 部分
-YOUTUBE_CHANNEL_ID = "YOUR_YOUTUBE_CHANNEL_ID"
+YOUTUBE_CHANNEL_ID = "UCg3LDKFWwCQMZlM_zyXgSUA"
 
 # Notion: wrangler secret put NOTION_API_KEY で安全に設定する
 # NOTION_API_KEY は secret のため wrangler.toml に書かない
+
+# Instagram: wrangler secret put INSTAGRAM_ACCESS_TOKEN で設定する
+# 取得手順:
+#   1. https://developers.facebook.com でアプリを作成
+#   2. 「Instagram」製品を追加
+#   3. @ogawakizukulab アカウントを接続
+#   4. アクセストークンを生成（長期トークン: 60日間有効）
+#   5. wrangler secret put INSTAGRAM_ACCESS_TOKEN
+# INSTAGRAM_ACCESS_TOKEN は secret のため wrangler.toml に書かない
 
 # Notion お知らせDB のデータベースID (URLの32桁の英数字)
 NOTION_NEWS_DB_ID = "f3ddd492f8b646359663bdff8458b915"
