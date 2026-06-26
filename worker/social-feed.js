@@ -35,6 +35,7 @@ export default {
     if (pathname === '/api/feed/youtube') return handleYouTubeFeed(env);
     if (pathname === '/api/news')         return handleNotionNews(env);
     if (pathname === '/api/blog')         return handleNotionBlog(env);
+    if (pathname === '/api/sync')         return handleSync(env);
 
     return new Response(JSON.stringify({ error: 'Not found' }), {
       status: 404,
@@ -42,6 +43,17 @@ export default {
     });
   },
 };
+
+// ── 手動同期 ───────────────────────────────────────────────────────
+
+async function handleSync(env) {
+  try {
+    await Promise.all([syncYouTube(env), syncNotionNews(env), syncNotionBlog(env)]);
+    return new Response(JSON.stringify({ ok: true, synced_at: new Date().toISOString() }), { headers: CORS_HEADERS });
+  } catch (e) {
+    return new Response(JSON.stringify({ ok: false, error: e.message }), { status: 500, headers: CORS_HEADERS });
+  }
+}
 
 // ── YouTube ────────────────────────────────────────────────────────
 
@@ -121,26 +133,28 @@ async function syncNotionNews(env) {
   if (!dbId || dbId === 'YOUR_NOTION_NEWS_DB_ID') return;
 
   const data = await queryNotion(env, dbId,
-    [{ property: 'Date', direction: 'descending' }],
+    [{ property: '公開日', direction: 'descending' }],
     { property: '公開', checkbox: { equals: true } }
   );
 
   await env.DB.prepare('DELETE FROM notion_news').run();
   const stmt = env.DB.prepare(
-    'INSERT INTO notion_news (notion_id, title, date, category, notion_url) VALUES (?, ?, ?, ?, ?)'
+    'INSERT INTO notion_news (notion_id, title, date, category, notion_url, cover_url) VALUES (?, ?, ?, ?, ?, ?)'
   );
   for (const page of data.results ?? []) {
     const title     = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
     const date      = page.properties['公開日']?.date?.start ?? '';
     const cat       = page.properties['カテゴリ']?.select?.name ?? 'お知らせ';
     const notionUrl = page.url ?? '';
-    if (title && date) await stmt.bind(page.id, title, date, cat, notionUrl).run();
+    const coverUrl  = page.cover?.type === 'file'     ? page.cover.file.url
+                    : page.cover?.type === 'external' ? page.cover.external.url : '';
+    if (title && date) await stmt.bind(page.id, title, date, cat, notionUrl, coverUrl).run();
   }
 }
 
 async function handleNotionNews(env) {
   const { results } = await env.DB.prepare(
-    'SELECT notion_id, title, date, category, notion_url FROM notion_news ORDER BY date DESC LIMIT 5'
+    'SELECT notion_id, title, date, category, notion_url, cover_url FROM notion_news ORDER BY date DESC LIMIT 5'
   ).all();
   return new Response(JSON.stringify(results ?? []), { headers: CORS_HEADERS });
 }
