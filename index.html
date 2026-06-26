@@ -735,7 +735,7 @@ nav {
 /* ══ NEWS + BLOG ══ */
 .nb-section { background: var(--bg-section); padding: 64px 48px; }
 .nb-inner { max-width: 960px; margin: 0 auto; }
-.nb-tab-bar { display: flex; border-bottom: 1px solid rgba(160,128,96,0.2); margin-bottom: 28px; }
+.nb-tab-bar { display: none; }
 .nb-tab {
   padding: 10px 24px; font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
   color: var(--text-lt); cursor: pointer; border-bottom: 2px solid transparent;
@@ -743,8 +743,6 @@ nav {
 }
 .nb-tab.active { color: var(--green); border-bottom-color: var(--green); }
 .nb-tab:hover:not(.active) { color: var(--text-md); }
-.nb-pane { display: none; }
-.nb-pane.active { display: block; }
 .nb-news-list { list-style: none; }
 .nb-news-item {
   display: flex; align-items: flex-start; gap: 12px;
@@ -762,7 +760,7 @@ a.nb-news-item { cursor: pointer; }
 .nb-cat-event  { background: rgba(192,112,64,.12); color: var(--orange); }
 .nb-cat-notice { background: rgba(74,103,65,.10);  color: var(--green); }
 .nb-news-title { font-size: 12px; color: var(--text-dk); line-height: 1.7; letter-spacing: 0.05em; }
-.nb-blog-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+.nb-blog-grid { display: none; }
 .nb-blog-card {
   background: var(--bg-card); border-radius: var(--radius-card); overflow: hidden;
   box-shadow: var(--shadow-card); text-decoration: none; transition: transform .18s; display: block;
@@ -1147,58 +1145,27 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
   <div class="nb-inner">
     <div class="deco-title">
       <span class="deco-mark">✦</span>
-      <h2>お知らせ・日々の記録</h2>
+      <h2>お知らせ</h2>
       <span class="sub-ja">Notionで更新 · 最新情報をお届けします</span>
     </div>
-    <div class="nb-tab-bar">
-      <div class="nb-tab active" data-tab="news">お知らせ</div>
-      <div class="nb-tab" data-tab="blog">スタッフブログ</div>
-    </div>
-
-    <!-- お知らせ pane -->
-    <div id="nb-pane-news" class="nb-pane active">
-      <ul id="nb-news-list" class="nb-news-list">
-        <li class="nb-news-item">
-          <span class="nb-news-date">&nbsp;</span>
-          <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
-          <span class="nb-skel-line" style="flex:1"></span>
-        </li>
-        <li class="nb-news-item">
-          <span class="nb-news-date">&nbsp;</span>
-          <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
-          <span class="nb-skel-line" style="flex:1"></span>
-        </li>
-        <li class="nb-news-item">
-          <span class="nb-news-date">&nbsp;</span>
-          <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
-          <span class="nb-skel-line" style="flex:1"></span>
-        </li>
-      </ul>
-      <!-- TODO: Notion お知らせDBの全件ページURLに置き換える -->
-      <a class="nb-more" id="nb-news-more" href="#">すべてのお知らせ →</a>
-    </div>
-
-    <!-- ブログ pane -->
-    <div id="nb-pane-blog" class="nb-pane">
-      <div id="nb-blog-grid" class="nb-blog-grid">
-        <div class="nb-blog-card" style="pointer-events:none">
-          <div class="nb-blog-thumb nb-skel-thumb" style="aspect-ratio:3/2"></div>
-          <div class="nb-blog-info">
-            <div class="nb-skel-line s"></div>
-            <div class="nb-skel-line"></div>
-          </div>
-        </div>
-        <div class="nb-blog-card" style="pointer-events:none">
-          <div class="nb-blog-thumb nb-skel-thumb" style="aspect-ratio:3/2"></div>
-          <div class="nb-blog-info">
-            <div class="nb-skel-line s"></div>
-            <div class="nb-skel-line"></div>
-          </div>
-        </div>
-      </div>
-      <!-- TODO: Notion ブログDBの全件ページURLに置き換える -->
-      <a class="nb-more" id="nb-blog-more" href="#">すべての記事 →</a>
-    </div>
+    <ul id="nb-news-list" class="nb-news-list">
+      <li class="nb-news-item">
+        <span class="nb-news-date">&nbsp;</span>
+        <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
+        <span class="nb-skel-line" style="flex:1"></span>
+      </li>
+      <li class="nb-news-item">
+        <span class="nb-news-date">&nbsp;</span>
+        <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
+        <span class="nb-skel-line" style="flex:1"></span>
+      </li>
+      <li class="nb-news-item">
+        <span class="nb-news-date">&nbsp;</span>
+        <span class="nb-skel-line" style="width:80px;flex-shrink:0"></span>
+        <span class="nb-skel-line" style="flex:1"></span>
+      </li>
+    </ul>
+    <a class="nb-more" id="nb-news-more" href="#">すべてのお知らせ →</a>
   </div>
 </section>
 
@@ -1552,17 +1519,6 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
 (function() {
   var WORKER_BASE = 'https://kame-social-feed.kizuku-lab.workers.dev';
 
-  // タブ切り替え
-  document.querySelectorAll('.nb-tab').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      var target = this.getAttribute('data-tab');
-      document.querySelectorAll('.nb-tab').forEach(function(t) { t.classList.remove('active'); });
-      document.querySelectorAll('.nb-pane').forEach(function(p) { p.classList.remove('active'); });
-      this.classList.add('active');
-      document.getElementById('nb-pane-' + target).classList.add('active');
-    });
-  });
-
   function pad(n) { return n < 10 ? '0' + n : String(n); }
   function fmtDate(s) {
     var d = new Date(s);
@@ -1593,33 +1549,10 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     }).join('');
   }
 
-  // ブログ
-  function renderBlog(items) {
-    var grid = document.getElementById('nb-blog-grid');
-    if (!grid || !items.length) return;
-    grid.innerHTML = items.slice(0, 4).map(function(item) {
-      var thumb = item.cover_url
-        ? '<div class="nb-blog-thumb"><img src="' + esc(item.cover_url) + '" alt="' + esc(item.title) + '" loading="lazy"></div>'
-        : '<div class="nb-blog-thumb nb-blog-thumb-empty"><span>写真</span></div>';
-      var url = item.notion_url || '#';
-      return '<a class="nb-blog-card" href="' + esc(url) + '" target="_blank" rel="noopener">' +
-        thumb +
-        '<div class="nb-blog-info">' +
-          '<div class="nb-blog-date">' + fmtDate(item.date) + '</div>' +
-          '<div class="nb-blog-title">' + esc(item.title) + '</div>' +
-        '</div>' +
-      '</a>';
-    }).join('');
-  }
-
   fetch(WORKER_BASE + '/api/news')
     .then(function(r) { return r.json(); })
     .then(renderNews)
     .catch(function() {});
-
-  fetch(WORKER_BASE + '/api/blog')
-    .then(function(r) { return r.json(); })
-    .then(renderBlog)
     .catch(function() {});
 })();
 </script>
