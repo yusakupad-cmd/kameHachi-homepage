@@ -8,7 +8,7 @@ compatibility_date = "2024-09-23"
 [[d1_databases]]
 binding       = "DB"
 database_name = "kame-social"
-database_id   = "YOUR_D1_DATABASE_ID"
+database_id   = "532d44be-2c1e-4112-bca8-7ec0f5f46d13"
 
 # ── 環境変数 ───────────────────────────────────────────────────────
 [vars]

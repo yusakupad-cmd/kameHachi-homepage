@@ -1514,7 +1514,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
 // YouTube 最新動画ロード
 // TODO: Worker デプロイ後に WORKER_URL を実際のURLに置き換える
 (function() {
-  var WORKER_URL = 'https://kame-social-feed.YOUR_SUBDOMAIN.workers.dev/api/feed/youtube';
+  var WORKER_URL = 'https://kame-social-feed.kizuku-lab.workers.dev/api/feed/youtube';
 
   function pad(n) { return n < 10 ? '0' + n : String(n); }
   function fmtDate(s) {
@@ -1547,7 +1547,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
 
 // ── お知らせ + ブログ統合セクション ─────────────────────────────────
 (function() {
-  var WORKER_BASE = 'https://kame-social-feed.YOUR_SUBDOMAIN.workers.dev';
+  var WORKER_BASE = 'https://kame-social-feed.kizuku-lab.workers.dev';
 
   // タブ切り替え
   document.querySelectorAll('.nb-tab').forEach(function(tab) {
