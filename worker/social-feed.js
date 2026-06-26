@@ -39,6 +39,7 @@ export default {
     if (pathname === '/api/news')            return handleNotionNews(env);
     if (pathname === '/api/blog')            return handleNotionBlog(env);
     if (pathname === '/api/sync')            return handleSync(env);
+    if (pathname === '/api/debug/news')      return handleDebugNews(env);
 
     return new Response(JSON.stringify({ error: 'Not found' }), {
       status: 404,
@@ -177,6 +178,50 @@ async function queryNotion(env, dbId, sorts, filter) {
 // HP側のrenderNews()が期待するフィールド形式に変換して返す。
 //   HP期待: [{ notion_id, title, date, category, notion_url, cover_url }]
 //   line-harness形式: { success, data: [{ id, title, category, publishedAt, content, ... }] }
+
+// ── デバッグ: upstream fetch の診断 ────────────────────────────────
+// GET /api/debug/news
+// wrangler tail 不要でフォールバック原因を確認できる診断エンドポイント
+
+async function handleDebugNews(env) {
+  const baseUrl = env.LINE_HARNESS_URL || 'https://line-harness.kizuku-lab.workers.dev';
+  const result = {
+    baseUrl,
+    upstreamOk: false,
+    upstreamStatus: null,
+    upstreamData: null,
+    upstreamError: null,
+    fallbackCount: null,
+    checkedAt: new Date().toISOString(),
+  };
+
+  try {
+    const res = await fetch(`${baseUrl}/api/public/news`, {
+      headers: { 'User-Agent': 'kame-social-feed-debug/1.0' },
+    });
+    result.upstreamStatus = res.status;
+    if (res.ok) {
+      const json = await res.json();
+      result.upstreamOk = true;
+      result.upstreamData = json;
+    } else {
+      result.upstreamError = `HTTP ${res.status}`;
+    }
+  } catch (e) {
+    result.upstreamError = e?.message ?? String(e);
+  }
+
+  try {
+    const row = await env.DB.prepare('SELECT COUNT(*) as cnt FROM notion_news').first();
+    result.fallbackCount = row?.cnt ?? null;
+  } catch {
+    // fallbackCount remains null
+  }
+
+  return new Response(JSON.stringify(result, null, 2), {
+    headers: { ...CORS_HEADERS, 'Cache-Control': 'no-store' },
+  });
+}
 
 async function handleNotionNews(env) {
   const baseUrl = env.LINE_HARNESS_URL || 'https://line-harness.kizuku-lab.workers.dev';
