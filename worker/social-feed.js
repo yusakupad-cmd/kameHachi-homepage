@@ -11,7 +11,7 @@
  */
 
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://yusakupad-cmd.github.io',
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
   'Content-Type': 'application/json; charset=utf-8',
 };
@@ -144,12 +144,14 @@ async function syncNotionNews(env) {
     'INSERT INTO notion_news (notion_id, title, date, category, notion_url, cover_url) VALUES (?, ?, ?, ?, ?, ?)'
   );
   for (const page of data.results ?? []) {
-    const title     = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
-    const date      = page.properties['公開日']?.date?.start ?? '';
-    const cat       = page.properties['カテゴリ']?.select?.name ?? 'お知らせ';
-    const notionUrl = page.url ?? '';
-    const coverUrl  = page.cover?.type === 'file'     ? page.cover.file.url
-                    : page.cover?.type === 'external' ? page.cover.external.url : '';
+    const title      = page.properties['タイトル']?.title?.[0]?.plain_text ?? '';
+    const date       = page.properties['公開日']?.date?.start ?? '';
+    const cat        = page.properties['カテゴリ']?.select?.name ?? 'お知らせ';
+    const subdomain  = env.NOTION_SITE_SUBDOMAIN || '';
+    const pageId     = page.id.replace(/-/g, '');
+    const notionUrl  = subdomain ? `https://${subdomain}.notion.site/${pageId}` : '';
+    const coverUrl   = page.cover?.type === 'file'     ? page.cover.file.url
+                     : page.cover?.type === 'external' ? page.cover.external.url : '';
     if (title && date) await stmt.bind(page.id, title, date, cat, notionUrl, coverUrl).run();
   }
 }
