@@ -21,7 +21,6 @@ export default {
     ctx.waitUntil(Promise.all([
       syncYouTube(env),
       syncNotionNews(env),
-      syncNotionBlog(env),
     ]));
   },
 
@@ -48,7 +47,7 @@ export default {
 
 async function handleSync(env) {
   try {
-    await Promise.all([syncYouTube(env), syncNotionNews(env), syncNotionBlog(env)]);
+    await Promise.all([syncYouTube(env), syncNotionNews(env)]);
     return new Response(JSON.stringify({ ok: true, synced_at: new Date().toISOString() }), { headers: CORS_HEADERS });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: e.message }), { status: 500, headers: CORS_HEADERS });
@@ -122,7 +121,10 @@ async function queryNotion(env, dbId, sorts, filter) {
     },
     body: JSON.stringify({ sorts, filter, page_size: 10 }),
   });
-  if (!res.ok) throw new Error(`Notion API ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`Notion API ${res.status}: ${body}`);
+  }
   return res.json();
 }
 

@@ -750,8 +750,8 @@ nav {
   text-decoration: none; color: inherit;
 }
 .nb-news-item:last-child { border-bottom: none; }
-a.nb-news-item:hover .nb-news-title { text-decoration: underline; }
-a.nb-news-item { cursor: pointer; }
+.nb-news-link { display: flex; align-items: center; gap: 14px; flex: 1; text-decoration: none; color: inherit; cursor: pointer; }
+.nb-news-link:hover .nb-news-title { text-decoration: underline; }
 .nb-news-thumb {
   width: 64px; height: 48px; flex-shrink: 0;
   border-radius: 4px; overflow: hidden; background: rgba(160,128,96,0.08);
@@ -1545,13 +1545,11 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     if (!list || !items.length) return;
     list.innerHTML = items.slice(0, 5).map(function(item) {
       var cat  = item.category || 'お知らせ';
-      var url  = item.notion_url || '#';
-      var open  = url !== '#' ? '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="nb-news-item">' : '<li class="nb-news-item">';
-      var close = url !== '#' ? '</a>' : '</li>';
+      var url  = item.notion_url || '';
       var thumb = item.cover_url
         ? '<div class="nb-news-thumb"><img src="' + esc(item.cover_url) + '" alt="" loading="lazy" width="64" height="48"></div>'
         : '<div class="nb-news-thumb-empty"></div>';
-      return open +
+      var inner =
         thumb +
         '<div class="nb-news-meta">' +
           '<div class="nb-news-row1">' +
@@ -1559,8 +1557,10 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
             '<span class="nb-cat ' + catClass(cat) + '">' + esc(cat) + '</span>' +
           '</div>' +
           '<span class="nb-news-title">' + esc(item.title) + '</span>' +
-        '</div>' +
-      close;
+        '</div>';
+      return url
+        ? '<li class="nb-news-item"><a href="' + esc(url) + '" target="_blank" rel="noopener" class="nb-news-link">' + inner + '</a></li>'
+        : '<li class="nb-news-item">' + inner + '</li>';
     }).join('');
   }
 
