@@ -775,6 +775,13 @@ a.insta-cell:hover img { transform: scale(1.05); }
 .nb-cat-event  { background: rgba(192,112,64,.12); color: var(--orange); }
 .nb-cat-notice { background: rgba(74,103,65,.10);  color: var(--green); }
 .nb-news-title { font-size: 17px; color: var(--text-dk); line-height: 1.6; letter-spacing: 0.05em; }
+.nb-news-item.nb-expandable { cursor: pointer; }
+.nb-news-item.nb-expandable .nb-news-header { display: flex; align-items: center; gap: 14px; flex: 1; }
+.nb-news-item.nb-expandable .nb-news-header:hover .nb-news-title { text-decoration: underline; }
+.nb-news-toggle { font-size: 12px; color: var(--text-lt); margin-left: auto; flex-shrink: 0; transition: transform 0.2s; user-select: none; }
+.nb-news-item.nb-expandable.open .nb-news-toggle { transform: rotate(180deg); }
+.nb-news-body { display: none; padding: 8px 0 4px 0; font-size: 15px; color: var(--text-md); line-height: 1.8; white-space: pre-wrap; border-top: 1px solid rgba(160,128,96,0.08); margin-top: 8px; }
+.nb-news-item.open .nb-news-body { display: block; }
 .nb-blog-grid { display: none; }
 .nb-blog-card {
   background: var(--bg-card); border-radius: var(--radius-card); overflow: hidden;
@@ -1691,13 +1698,13 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     var list = document.getElementById('nb-news-list');
     if (!list || !items.length) return;
     list.innerHTML = items.slice(0, 5).map(function(item) {
-      var cat  = item.category || 'お知らせ';
-      var url  = item.notion_url || '';
+      var cat     = item.category || 'お知らせ';
+      var url     = item.notion_url || '';
+      var content = item.content || '';
       var thumb = item.cover_url
         ? '<div class="nb-news-thumb"><img src="' + esc(item.cover_url) + '" alt="" loading="lazy" width="64" height="48"></div>'
         : '<div class="nb-news-thumb-empty"></div>';
-      var inner =
-        thumb +
+      var meta =
         '<div class="nb-news-meta">' +
           '<div class="nb-news-row1">' +
             '<span class="nb-news-date">' + fmtDate(item.date) + '</span>' +
@@ -1705,10 +1712,34 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
           '</div>' +
           '<span class="nb-news-title">' + esc(item.title) + '</span>' +
         '</div>';
-      return url
-        ? '<li class="nb-news-item"><a href="' + esc(url) + '" target="_blank" rel="noopener" class="nb-news-link">' + inner + '</a></li>'
-        : '<li class="nb-news-item">' + inner + '</li>';
+
+      if (url) {
+        // 外部リンクあり → 従来通りリンク
+        return '<li class="nb-news-item">' +
+          '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="nb-news-link">' + thumb + meta + '</a>' +
+          '</li>';
+      } else if (content) {
+        // 本文あり → クリックでアコーディオン展開
+        return '<li class="nb-news-item nb-expandable">' +
+          '<div class="nb-news-header">' + thumb + meta + '<span class="nb-news-toggle">▼</span></div>' +
+          '<div class="nb-news-body">' + esc(content) + '</div>' +
+          '</li>';
+      } else {
+        // リンクも本文もない → クリック不可
+        return '<li class="nb-news-item">' + thumb + meta + '</li>';
+      }
     }).join('');
+
+    // アコーディオンのクリックイベント
+    list.querySelectorAll('.nb-expandable').forEach(function(li) {
+      li.querySelector('.nb-news-header').addEventListener('click', function() {
+        li.classList.toggle('open');
+      });
+    });
+
+    // お知らせが1件以上あれば「すべてのお知らせ」リンクを非表示
+    var more = document.getElementById('nb-news-more');
+    if (more) more.style.display = 'none';
   }
 
   fetch(WORKER_BASE + '/api/news')
