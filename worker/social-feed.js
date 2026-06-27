@@ -183,10 +183,25 @@ async function queryNotion(env, dbId, sorts, filter) {
 // GET /api/debug/news
 // wrangler tail 不要でフォールバック原因を確認できる診断エンドポイント
 
-async function handleDebugNews(env) {
+async function fetchLineHarness(env, path) {
+  // Service Binding が利用可能な場合はそちらを優先（同一アカウント内 Worker-to-Worker）
+  if (env.LINE_HARNESS) {
+    return env.LINE_HARNESS.fetch(
+      new Request(`https://line-harness.kizuku-lab.workers.dev${path}`, {
+        headers: { 'User-Agent': 'kame-social-feed/1.0' },
+      })
+    );
+  }
+  // フォールバック: HTTP fetch（別アカウントへの接続時）
   const baseUrl = env.LINE_HARNESS_URL || 'https://line-harness.kizuku-lab.workers.dev';
+  return fetch(`${baseUrl}${path}`, {
+    headers: { 'User-Agent': 'kame-social-feed/1.0' },
+  });
+}
+
+async function handleDebugNews(env) {
   const result = {
-    baseUrl,
+    mode: env.LINE_HARNESS ? 'service-binding' : 'http-fetch',
     upstreamOk: false,
     upstreamStatus: null,
     upstreamData: null,
@@ -196,9 +211,7 @@ async function handleDebugNews(env) {
   };
 
   try {
-    const res = await fetch(`${baseUrl}/api/public/news`, {
-      headers: { 'User-Agent': 'kame-social-feed-debug/1.0' },
-    });
+    const res = await fetchLineHarness(env, '/api/public/news');
     result.upstreamStatus = res.status;
     if (res.ok) {
       const json = await res.json();
@@ -224,11 +237,8 @@ async function handleDebugNews(env) {
 }
 
 async function handleNotionNews(env) {
-  const baseUrl = env.LINE_HARNESS_URL || 'https://line-harness.kizuku-lab.workers.dev';
   try {
-    const res = await fetch(`${baseUrl}/api/public/news`, {
-      headers: { 'User-Agent': 'kame-social-feed/1.0' },
-    });
+    const res = await fetchLineHarness(env, '/api/public/news');
     if (!res.ok) throw new Error(`upstream ${res.status}`);
     const json = await res.json();
     const items = (json.data ?? []).slice(0, 5).map(item => ({

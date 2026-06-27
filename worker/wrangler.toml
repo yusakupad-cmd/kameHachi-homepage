@@ -10,10 +10,19 @@ binding       = "DB"
 database_name = "kame-social"
 database_id   = "532d44be-2c1e-4112-bca8-7ec0f5f46d13"
 
+# line-harness Worker への Service Binding（同一アカウント内 Worker-to-Worker 直接接続）
+# workers.dev 経由の HTTP fetch は内部ルーティングで 404 になるため Service Binding を使用
+[[services]]
+binding = "LINE_HARNESS"
+service = "line-harness"
+
 # ── 環境変数 ───────────────────────────────────────────────────────
 [vars]
 # YouTube チャンネルID: https://www.youtube.com/channel/XXXX の XXXX 部分
 YOUTUBE_CHANNEL_ID = "UCg3LDKFWwCQMZlM_zyXgSUA"
+
+# line-harness-oss Worker URL（お知らせプロキシ先）
+LINE_HARNESS_URL = "https://line-harness.kizuku-lab.workers.dev"
 
 # Notion: wrangler secret put NOTION_API_KEY で安全に設定する
 # NOTION_API_KEY は secret のため wrangler.toml に書かない
