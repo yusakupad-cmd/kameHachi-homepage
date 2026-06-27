@@ -244,10 +244,11 @@ async function handleNotionNews(env) {
     const items = (json.data ?? []).slice(0, 5).map(item => ({
       notion_id:  item.id,
       title:      item.title,
+      content:    item.content || '',  // HP側アコーディオン展開用
       date:       (item.publishedAt || item.createdAt || '').slice(0, 10),
       category:   item.category || 'お知らせ',
-      notion_url: '',    // 記事詳細URLなし（管理はダッシュボードで行う）
-      cover_url:  '',    // カバー画像なし
+      notion_url: '',
+      cover_url:  '',
     }));
     return new Response(JSON.stringify(items), { headers: CORS_HEADERS });
   } catch (e) {
