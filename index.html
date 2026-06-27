@@ -894,6 +894,50 @@ details[open] .faq-q-arrow { transform: rotate(180deg); }
 }
 .btn-form-sub:hover { background: rgba(160,120,80,0.08); }
 
+/* ── 見学予約フォーム ──────────────────────────────────────────────── */
+.visit-form-wrap {
+  background: rgba(74,103,65,.06); border: 1px solid rgba(74,103,65,.15);
+  border-radius: 12px; padding: 28px 28px 24px; margin-bottom: 24px;
+}
+.visit-form-title {
+  font-size: 20px; font-weight: 600; color: var(--text-dk);
+  letter-spacing: 0.1em; margin-bottom: 18px; text-align: center;
+}
+.visit-form-row { margin-bottom: 14px; }
+.visit-form-row label {
+  display: block; font-size: 16px; font-weight: 500;
+  color: var(--text-md); margin-bottom: 5px; letter-spacing: 0.06em;
+}
+.visit-form-row .req {
+  display: inline-block; background: var(--green); color: #fff;
+  font-size: 12px; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle;
+}
+.visit-form-row input,
+.visit-form-row textarea {
+  width: 100%; padding: 11px 14px; font-size: 18px;
+  border: 1px solid rgba(160,128,96,.3); border-radius: 8px;
+  background: rgba(255,255,255,.8); color: var(--text-dk);
+  font-family: inherit; line-height: 1.6; box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.visit-form-row input:focus,
+.visit-form-row textarea:focus {
+  outline: none; border-color: var(--green);
+}
+.visit-form-row textarea { resize: vertical; min-height: 90px; }
+.visit-form-submit {
+  display: block; width: 100%; padding: 14px;
+  background: var(--green); color: var(--white); border: none;
+  border-radius: var(--radius-btn); font-size: 19px; font-weight: 500;
+  letter-spacing: 0.12em; cursor: pointer; font-family: inherit;
+  transition: background 0.2s, transform 0.15s;
+}
+.visit-form-submit:hover { background: var(--brown); transform: translateY(-1px); }
+.visit-form-submit:disabled { opacity: 0.6; pointer-events: none; }
+.visit-form-msg { text-align: center; font-size: 17px; padding: 12px 0; }
+.visit-form-msg.success { color: var(--green); }
+.visit-form-msg.error   { color: #c0392b; }
+
 /* ══ FOOTER ══ */
 footer { background: #3A2D22; padding: 36px 48px 24px; }
 .footer-inner { max-width: 960px; margin: 0 auto; }
@@ -1072,7 +1116,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     <a class="nav-link" href="#contact"><span>お問い合わせ</span></a>
   </nav>
   <div class="header-cta">
-    <a class="btn-line-round" href="#">
+    <a class="btn-line-round" href="https://line.me/R/ti/p/@508iiftv" target="_blank" rel="noopener">
       <span class="line-chip-round">LINE</span>
       LINEで見学予約
     </a>
@@ -1090,7 +1134,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
   <a class="mobile-nav-link" href="#voices">ご利用者の声</a>
   <a class="mobile-nav-link" href="#faq">よくある質問</a>
   <a class="mobile-nav-link" href="#contact">お問い合わせ</a>
-  <a class="mobile-nav-cta" href="#">
+  <a class="mobile-nav-cta" href="https://line.me/R/ti/p/@508iiftv" target="_blank" rel="noopener">
     <span class="line-chip-round">LINE</span>
     LINEで見学・相談する
   </a>
@@ -1117,7 +1161,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       <span class="hero-tag">朝比奈川沿い</span>
     </div>
     <div class="hero-ctas">
-      <a class="hero-btn-primary" href="#">
+      <a class="hero-btn-primary" href="https://line.me/R/ti/p/@508iiftv" target="_blank" rel="noopener">
         <span class="line-chip-round">LINE</span>
         LINEで見学・相談する
       </a>
@@ -1527,7 +1571,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
         </div>
         <span class="contact-icon-label">メール</span>
       </a>
-      <a class="contact-icon-item" href="#">
+      <a class="contact-icon-item" href="https://line.me/R/ti/p/@508iiftv" target="_blank" rel="noopener">
         <div style="width:48px;height:48px;border:1.5px solid var(--green-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7A9E78" stroke-width="1.5">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
@@ -1548,8 +1592,33 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       <p>静岡県藤枝市岡部町 ○○番地<br>朝比奈川沿い</p>
       <p>Googleマップで見る ›</p>
     </div>
+    <!-- 見学予約フォーム -->
+    <div class="visit-form-wrap" id="visit-form">
+      <p class="visit-form-title">見学・体験のお申し込み</p>
+      <form id="kame-visit-form" novalidate>
+        <div class="visit-form-row">
+          <label for="vf-name">お名前<span class="req">必須</span></label>
+          <input type="text" id="vf-name" name="visitor_name" placeholder="例：山田 太郎" required>
+        </div>
+        <div class="visit-form-row">
+          <label for="vf-phone">電話番号<span class="req">必須</span></label>
+          <input type="tel" id="vf-phone" name="phone" placeholder="例：090-0000-0000" required>
+        </div>
+        <div class="visit-form-row">
+          <label for="vf-date">ご希望日時</label>
+          <input type="text" id="vf-date" name="preferred_date" placeholder="例：7月中旬の午後">
+        </div>
+        <div class="visit-form-row">
+          <label for="vf-msg">ご質問・ご要望</label>
+          <textarea id="vf-msg" name="message" placeholder="お気軽にどうぞ"></textarea>
+        </div>
+        <div id="kame-visit-msg" class="visit-form-msg" style="display:none"></div>
+        <button type="submit" class="visit-form-submit">送信する</button>
+      </form>
+    </div>
+
     <div class="contact-btns">
-      <a class="btn-form-line" href="#">
+      <a class="btn-form-line" href="https://line.me/R/ti/p/@508iiftv" target="_blank" rel="noopener">
         <span class="line-chip-round">LINE</span>
         LINEで見学・体験の予約をする
       </a>
@@ -1746,6 +1815,58 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     .then(function(r) { return r.json(); })
     .then(renderNews)
     .catch(function() {});
+})();
+
+// ── 見学予約フォーム送信 ──────────────────────────────────────────────
+(function() {
+  var FORM_ID = 'kame-visit-2026';
+  var API = 'https://line-harness.kizuku-lab.workers.dev/api/forms/' + FORM_ID + '/submit';
+
+  var form = document.getElementById('kame-visit-form');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = form.querySelector('.visit-form-submit');
+    var msg = document.getElementById('kame-visit-msg');
+
+    var name  = form.querySelector('[name="visitor_name"]').value.trim();
+    var phone = form.querySelector('[name="phone"]').value.trim();
+    if (!name || !phone) {
+      msg.textContent = 'お名前と電話番号は必須です。';
+      msg.className = 'visit-form-msg error';
+      msg.style.display = 'block';
+      return;
+    }
+
+    var data = {};
+    new FormData(form).forEach(function(v, k) { if (v) data[k] = v; });
+
+    btn.disabled = true;
+    btn.textContent = '送信中…';
+    msg.style.display = 'none';
+
+    fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function() {
+        msg.textContent = 'お申し込みありがとうございます！担当者よりご連絡いたします。';
+        msg.className = 'visit-form-msg success';
+        msg.style.display = 'block';
+        form.reset();
+        btn.textContent = '送信しました';
+      })
+      .catch(function() {
+        msg.textContent = '送信に失敗しました。お電話またはLINEよりお問い合わせください。';
+        msg.className = 'visit-form-msg error';
+        msg.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = '送信する';
+      });
+  });
 })();
 
 </script>
