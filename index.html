@@ -1116,7 +1116,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     <a class="nav-link" href="#contact"><span>お問い合わせ</span></a>
   </nav>
   <div class="header-cta">
-    <a class="btn-line-round" href="https://line.me/R/ti/p/@508iiftv" target="_blank" rel="noopener">
+    <a class="btn-line-round" href="https://line.me/R/oaMessage/@508iiftv?text=%E8%A6%8B%E5%AD%A6%E4%BA%88%E7%B4%84" target="_blank" rel="noopener">
       <span class="line-chip-round">LINE</span>
       LINEで見学予約
     </a>
@@ -1596,13 +1596,14 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     <div class="visit-form-wrap" id="visit-form">
       <p class="visit-form-title">見学・体験のお申し込み</p>
       <form id="kame-visit-form" novalidate>
+        <input type="hidden" name="line_account_id" value="4f61bb60-0a58-44ab-acb4-cb65a1965e71">
         <div class="visit-form-row">
           <label for="vf-name">お名前<span class="req">必須</span></label>
           <input type="text" id="vf-name" name="visitor_name" placeholder="例：山田 太郎" required>
         </div>
         <div class="visit-form-row">
           <label for="vf-phone">電話番号<span class="req">必須</span></label>
-          <input type="tel" id="vf-phone" name="phone" placeholder="例：090-0000-0000" required>
+          <input type="tel" id="vf-phone" name="visitor_phone" placeholder="例：090-0000-0000" required>
         </div>
         <div class="visit-form-row">
           <label for="vf-date">ご希望日時</label>
@@ -1618,7 +1619,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     </div>
 
     <div class="contact-btns">
-      <a class="btn-form-line" href="https://line.me/R/ti/p/@508iiftv" target="_blank" rel="noopener">
+      <a class="btn-form-line" href="https://line.me/R/oaMessage/@508iiftv?text=%E8%A6%8B%E5%AD%A6%E4%BA%88%E7%B4%84" target="_blank" rel="noopener">
         <span class="line-chip-round">LINE</span>
         LINEで見学・体験の予約をする
       </a>
@@ -1819,8 +1820,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
 
 // ── 見学予約フォーム送信 ──────────────────────────────────────────────
 (function() {
-  var FORM_ID = 'kame-visit-2026';
-  var API = 'https://line-harness.kizuku-lab.workers.dev/api/forms/' + FORM_ID + '/submit';
+  var API = 'https://line-harness.kizuku-lab.workers.dev/api/visit-requests/hp-submit';
 
   var form = document.getElementById('kame-visit-form');
   if (!form) return;
@@ -1831,7 +1831,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     var msg = document.getElementById('kame-visit-msg');
 
     var name  = form.querySelector('[name="visitor_name"]').value.trim();
-    var phone = form.querySelector('[name="phone"]').value.trim();
+    var phone = form.querySelector('[name="visitor_phone"]').value.trim();
     if (!name || !phone) {
       msg.textContent = 'お名前と電話番号は必須です。';
       msg.className = 'visit-form-msg error';
