@@ -53,7 +53,7 @@
     "priceRange": "介護保険適用",
     "servedCuisine": null,
     "sameAs": [
-      "TODO:InstagramのURL",
+      "https://www.instagram.com/noribeogawa/",
       "https://www.youtube.com/@hatchi1725"
     ],
     "parentOrganization": {
@@ -544,6 +544,13 @@ nav {
   line-height: 2;
 }
 .about-insta { margin-top: 52px; border-top: 1px solid rgba(160,128,96,0.12); padding-top: 48px; }
+.insta-placeholder {
+  background: linear-gradient(135deg, var(--bg-accent), var(--green-pale));
+  border-radius: 8px; padding: 52px 24px; margin-bottom: 24px;
+  text-align: center; color: var(--text-lt);
+  font-size: 16px; letter-spacing: 0.08em; line-height: 1.9;
+}
+.insta-placeholder .ig-mark { display: block; font-size: 30px; margin-bottom: 10px; opacity: 0.55; }
 
 /* ══ FLOOR ══ */
 .floor-section { background: var(--bg-section); padding: 80px 48px; }
@@ -1210,15 +1217,22 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
         <span class="deco-mark">✦</span>
         <h2>インスタグラム</h2>
       </div>
-      <behold-widget feed-id="IglvIhGJgjXK5eU4jT48"></behold-widget>
+      <!-- ▼ 本番 Feed ID 到着後の手順：この insta-placeholder を削除し、下の behold-widget コメントを解除。feed-id="【本番FeedID】" に差し替える -->
+      <div class="insta-placeholder">
+        <span class="ig-mark">✦</span>
+        最新の投稿はInstagramでご覧いただけます
+      </div>
+      <!--
+      <behold-widget feed-id="【本番FeedID】"></behold-widget>
       <script>
         (() => {
           const d=document,s=d.createElement("script");s.type="module";
           s.src="https://w.behold.so/widget.js";d.head.append(s);
         })();
       </script>
+      -->
       <div class="insta-btn-wrap">
-        <a class="btn-ig" href="https://www.instagram.com/ogawakizukulab/" target="_blank" rel="noopener">INSTAGRAMへ</a>
+        <a class="btn-ig" href="https://www.instagram.com/noribeogawa/" target="_blank" rel="noopener">INSTAGRAMへ</a>
       </div>
     </div>
   </div>
