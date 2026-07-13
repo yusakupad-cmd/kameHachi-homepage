@@ -1217,20 +1217,14 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
         <span class="deco-mark">✦</span>
         <h2>インスタグラム</h2>
       </div>
-      <!-- ▼ 本番 Feed ID 到着後の手順：この insta-placeholder を削除し、下の behold-widget コメントを解除。feed-id="【本番FeedID】" に差し替える -->
-      <div class="insta-placeholder">
-        <span class="ig-mark">✦</span>
-        最新の投稿はInstagramでご覧いただけます
-      </div>
-      <!--
-      <behold-widget feed-id="【本番FeedID】"></behold-widget>
+      <behold-widget feed-id="VrYAtRNLeLZYaly5nOuG"></behold-widget>
       <script>
         (() => {
+          if(window.__bhldScript)return;window.__bhldScript=true;
           const d=document,s=d.createElement("script");s.type="module";
-          s.src="https://w.behold.so/widget.js";d.head.append(s);
+          s.src="https://w.behold.so/widget.js";setTimeout(()=>{d.head.append(s);},0);
         })();
       </script>
-      -->
       <div class="insta-btn-wrap">
         <a class="btn-ig" href="https://www.instagram.com/noribeogawa/" target="_blank" rel="noopener">INSTAGRAMへ</a>
       </div>
