@@ -18,6 +18,9 @@ service = "line-harness"
 
 # ── 環境変数 ───────────────────────────────────────────────────────
 [vars]
+# 亀八茶屋のLINEアカウントID（公開お知らせのテナント指定）
+LINE_ACCOUNT_ID = "67c308f4-1398-417d-be91-e4b7c5a58851"
+
 # YouTube チャンネルID: https://www.youtube.com/channel/XXXX の XXXX 部分
 YOUTUBE_CHANNEL_ID = "UCg3LDKFWwCQMZlM_zyXgSUA"
 

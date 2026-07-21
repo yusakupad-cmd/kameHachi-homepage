@@ -199,6 +199,14 @@ async function fetchLineHarness(env, path) {
   });
 }
 
+function publicNewsPath(env) {
+  if (!env.LINE_ACCOUNT_ID) {
+    throw new Error('LINE_ACCOUNT_ID is not configured');
+  }
+
+  return `/api/public/news?accountId=${encodeURIComponent(env.LINE_ACCOUNT_ID)}`;
+}
+
 async function handleDebugNews(env) {
   const result = {
     mode: env.LINE_HARNESS ? 'service-binding' : 'http-fetch',
@@ -211,7 +219,7 @@ async function handleDebugNews(env) {
   };
 
   try {
-    const res = await fetchLineHarness(env, '/api/public/news');
+    const res = await fetchLineHarness(env, publicNewsPath(env));
     result.upstreamStatus = res.status;
     if (res.ok) {
       const json = await res.json();
@@ -238,7 +246,7 @@ async function handleDebugNews(env) {
 
 async function handleNotionNews(env) {
   try {
-    const res = await fetchLineHarness(env, '/api/public/news');
+    const res = await fetchLineHarness(env, publicNewsPath(env));
     if (!res.ok) throw new Error(`upstream ${res.status}`);
     const json = await res.json();
     const items = (json.data ?? []).slice(0, 5).map(item => ({
