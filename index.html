@@ -505,6 +505,10 @@ nav {
   flex: 0 0 360px;
   border-radius: var(--radius-card);
   overflow: hidden;
+  /* 本文の方が長いため、スクロールに追従させて左側に生まれる余白を解消する */
+  position: sticky;
+  top: 92px;
+  align-self: flex-start;
 }
 .about-main-photo {
   width: 100%;
@@ -1072,7 +1076,8 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
   .hero-tag { font-size: 11px; }
 
   .about-flex { flex-direction: column; gap: 28px; }
-  .about-img { flex: none; width: 100%; }
+  /* 縦積みでは左右の高さ差がそもそも起きないため sticky は無効化する */
+  .about-img { flex: none; width: 100%; position: static; }
   .about-gallery-grid img { aspect-ratio: 16/9; }
   .about-text .lead { font-size: 19px; line-height: 1.9; }
   .about-text .body { font-size: 17px; line-height: 2.1; }
