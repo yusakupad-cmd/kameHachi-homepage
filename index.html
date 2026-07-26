@@ -587,7 +587,15 @@ nav {
   aspect-ratio: 4/3;
   background: linear-gradient(135deg, var(--bg-accent) 0%, var(--green-pale) 100%);
   display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
 }
+.floor-card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s;
+}
+.floor-card:hover .floor-card-img img { transform: scale(1.04); }
 .floor-icon-wrap {
   display: flex; flex-direction: column; align-items: center; gap: 10px;
 }
@@ -714,7 +722,8 @@ a.insta-cell img {
   transition: transform 0.3s ease;
 }
 a.insta-cell:hover img { transform: scale(1.05); }
-.insta-btn-wrap { text-align: center; }
+/* Behold のバッジがウィジェット下端に重なるため、ボタンは余白を空けて置く */
+.insta-btn-wrap { text-align: center; margin-top: 28px; }
 .btn-ig {
   display: inline-block; padding: 12px 36px;
   border: 1px solid var(--green); border-radius: var(--radius-btn);
@@ -1195,11 +1204,16 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     </div>
     <div class="about-flex">
       <div class="about-img">
-        <div class="about-gallery-grid">
-          <img src="activity-01-bubble.jpg" alt="シャボン玉の屋外活動" loading="lazy" decoding="async">
-          <img src="activity-02-hydrangea.jpg" alt="施設の紫陽花" loading="lazy" decoding="async">
-          <img src="activity-03-ondo-lyrics.jpg" alt="亀八音頭の歌詞" loading="lazy" decoding="async">
-          <img src="activity-04-ondo-live.jpg" alt="亀八音頭の演奏" loading="lazy" decoding="async">
+        <behold-widget feed-id="VrYAtRNLeLZYaly5nOuG"></behold-widget>
+        <script>
+          (() => {
+            if(window.__bhldScript)return;window.__bhldScript=true;
+            const d=document,s=d.createElement("script");s.type="module";
+            s.src="https://w.behold.so/widget.js";setTimeout(()=>{d.head.append(s);},0);
+          })();
+        </script>
+        <div class="insta-btn-wrap">
+          <a class="btn-ig" href="https://www.instagram.com/noribeogawa/" target="_blank" rel="noopener">INSTAGRAMへ</a>
         </div>
       </div>
       <div class="about-text">
@@ -1210,23 +1224,6 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
           <p>ここでの時間は、特別でなくていいと思っています。好きな歌を歌って、誰かと話して、あたりまえの一日を丁寧にいっしょに過ごせればと思っています。</p>
         </div>
         <div class="about-meta">NPO法人タートルエイト　|　1999年設立　|　静岡県藤枝市岡部町</div>
-      </div>
-    </div>
-    <div class="about-insta">
-      <div class="deco-title">
-        <span class="deco-mark">✦</span>
-        <h2>インスタグラム</h2>
-      </div>
-      <behold-widget feed-id="VrYAtRNLeLZYaly5nOuG"></behold-widget>
-      <script>
-        (() => {
-          if(window.__bhldScript)return;window.__bhldScript=true;
-          const d=document,s=d.createElement("script");s.type="module";
-          s.src="https://w.behold.so/widget.js";setTimeout(()=>{d.head.append(s);},0);
-        })();
-      </script>
-      <div class="insta-btn-wrap">
-        <a class="btn-ig" href="https://www.instagram.com/noribeogawa/" target="_blank" rel="noopener">INSTAGRAMへ</a>
       </div>
     </div>
   </div>
@@ -1245,10 +1242,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     <div class="floor-grid">
       <a class="floor-card" href="#">
         <div class="floor-card-img">
-          <div class="floor-icon-wrap">
-            <div style="font-size:32px;opacity:0.4;">🐢</div>
-            <span class="floor-icon-label">小規模個別ケア</span>
-          </div>
+          <img src="activity-01-bubble.jpg" alt="シャボン玉の屋外活動" loading="lazy" decoding="async">
         </div>
         <div class="floor-card-label label-green">小規模個別ケア</div>
         <div class="floor-card-body">
@@ -1258,10 +1252,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       </a>
       <a class="floor-card" href="#">
         <div class="floor-card-img">
-          <div class="floor-icon-wrap">
-            <div style="font-size:32px;opacity:0.4;">🎵</div>
-            <span class="floor-icon-label">音楽・アート療法</span>
-          </div>
+          <img src="activity-04-ondo-live.jpg" alt="亀八音頭の演奏" loading="lazy" decoding="async">
         </div>
         <div class="floor-card-label label-brown">音楽・アート療法</div>
         <div class="floor-card-body">
@@ -1286,10 +1277,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     <div class="floor-grid-sub">
       <a class="floor-card" href="#">
         <div class="floor-card-img">
-          <div class="floor-icon-wrap">
-            <div style="font-size:32px;opacity:0.4;">🌿</div>
-            <span class="floor-icon-label">自然・四季</span>
-          </div>
+          <img src="activity-02-hydrangea.jpg" alt="施設の紫陽花" loading="lazy" decoding="async">
         </div>
         <div class="floor-card-label label-green">朝比奈川の自然環境</div>
         <div class="floor-card-body">
@@ -1299,10 +1287,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       </a>
       <a class="floor-card" href="#">
         <div class="floor-card-img">
-          <div class="floor-icon-wrap">
-            <div style="font-size:32px;opacity:0.4;">🏡</div>
-            <span class="floor-icon-label">デイサービス</span>
-          </div>
+          <img src="activity-03-ondo-lyrics.jpg" alt="亀八音頭の歌詞" loading="lazy" decoding="async">
         </div>
         <div class="floor-card-label label-brown">27年の実績</div>
         <div class="floor-card-body">
