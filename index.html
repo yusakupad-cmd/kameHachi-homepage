@@ -500,15 +500,13 @@ nav {
   padding: 80px 48px;
 }
 .about-inner { max-width: 960px; margin: 0 auto; }
-.about-flex { display: flex; gap: 52px; align-items: flex-start; }
+/* Instagram(横並び全幅)を上、本文(読みやすい幅に絞って中央寄せ)を下に積む構成。
+   左右2カラムだと写真ブロックが本文より大幅に短く、下に大きな余白ができていたための変更。 */
+.about-flex { display: flex; flex-direction: column; gap: 40px; align-items: center; }
 .about-img {
-  flex: 0 0 360px;
+  width: 100%;
   border-radius: var(--radius-card);
   overflow: hidden;
-  /* 本文の方が長いため、スクロールに追従させて左側に生まれる余白を解消する */
-  position: sticky;
-  top: 92px;
-  align-self: flex-start;
 }
 .about-main-photo {
   width: 100%;
@@ -516,7 +514,7 @@ nav {
   object-fit: cover;
   display: block;
 }
-.about-text { flex: 1; padding-top: 8px; }
+.about-text { width: 100%; max-width: 680px; }
 .about-text .lead {
   font-family: 'Noto Serif JP', serif;
   font-size: 19px;
@@ -1075,9 +1073,6 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
   .hero-btn-primary, .hero-btn-sub { width: 100%; max-width: 300px; justify-content: center; }
   .hero-tag { font-size: 11px; }
 
-  .about-flex { flex-direction: column; gap: 28px; }
-  /* 縦積みでは左右の高さ差がそもそも起きないため sticky は無効化する */
-  .about-img { flex: none; width: 100%; position: static; }
   .about-gallery-grid img { aspect-ratio: 16/9; }
   .about-text .lead { font-size: 19px; line-height: 1.9; }
   .about-text .body { font-size: 17px; line-height: 2.1; }
