@@ -1,0 +1,10 @@
+
+# secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+*.pem
+*.key
+secrets/
+.DS_Store
