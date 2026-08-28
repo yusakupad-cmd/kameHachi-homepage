@@ -1,5 +1,12 @@
 # kameHachi-homepage 開発ガードレール
 
+## 作業開始の共通入口
+
+- 編集前に `HANDOFF.md` と該当する `docs/strategy/` を読む（該当文書が無ければ、その事実を記録する）。
+- 正本が `/Users/ogawayuusaku/projects/kameHachi-homepage` であることと、branch・HEAD・dirty・worktreeを確認する。
+- 最新のユーザー指示を操作権限の上限とし、下位操作の許可から上位操作を推測しない。
+- 正本、権限、writer、Git状態が不明なら、編集前に `HUMAN_DECISION_REQUIRED` で停止する。
+
 > 亀八茶屋（クライアント）の公式ホームページ。**実運用中のサイト**であり、壊すと直接お客様の目に触れる。
 > この文書が Claude / Codex 双方が読む規約の正本。`CLAUDE.md` は本ファイルを参照するだけ。
 
