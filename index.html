@@ -774,6 +774,7 @@ a.insta-cell:hover img { transform: scale(1.05); }
   text-decoration: none; color: inherit;
 }
 .nb-news-item:last-child { border-bottom: none; }
+.nb-news-empty { color: var(--text-md); font-size: 16px; line-height: 1.8; }
 .nb-news-link { display: flex; align-items: center; gap: 14px; flex: 1; text-decoration: none; color: inherit; cursor: pointer; }
 .nb-news-link:hover .nb-news-title { text-decoration: underline; }
 .nb-news-thumb {
@@ -1268,7 +1269,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     <div class="deco-title">
       <span class="deco-mark">✦</span>
       <h2>お知らせ</h2>
-      <span class="sub-ja">Notionで更新 · 最新情報をお届けします</span>
+      <span class="sub-ja">亀八茶屋からの最新情報をお届けします</span>
     </div>
     <ul id="nb-news-list" class="nb-news-list">
       <li class="nb-news-item">
@@ -1287,7 +1288,6 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
         <span class="nb-skel-line" style="flex:1"></span>
       </li>
     </ul>
-    <a class="nb-more" id="nb-news-more" href="https://zest-meadowlark-170.notion.site/f3ddd492f8b646359663bdff8458b915?v=d81529643e274ebe951fdad5624f5883" target="_blank" rel="noopener">すべてのお知らせ →</a>
   </div>
 </section>
 
@@ -1684,12 +1684,22 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
   }
 
   // お知らせ
+  function showNewsMessage(message) {
+    var list = document.getElementById('nb-news-list');
+    if (!list) return;
+    list.innerHTML = '<li class="nb-news-item nb-news-empty">' + message + '</li>';
+  }
+
   function renderNews(items) {
     var list = document.getElementById('nb-news-list');
-    if (!list || !items.length) return;
+    if (!list) return;
+    if (!Array.isArray(items)) throw new Error('Invalid news response');
+    if (!items.length) {
+      showNewsMessage('現在、表示できるお知らせはありません。');
+      return;
+    }
     list.innerHTML = items.slice(0, 5).map(function(item) {
       var cat     = item.category || 'お知らせ';
-      var url     = item.notion_url || '';
       var content = item.content || '';
       var thumb = item.cover_url
         ? '<div class="nb-news-thumb"><img src="' + esc(item.cover_url) + '" alt="" loading="lazy" width="64" height="48"></div>'
@@ -1703,12 +1713,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
           '<span class="nb-news-title">' + esc(item.title) + '</span>' +
         '</div>';
 
-      if (url) {
-        // 外部リンクあり → 従来通りリンク
-        return '<li class="nb-news-item">' +
-          '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="nb-news-link">' + thumb + meta + '</a>' +
-          '</li>';
-      } else if (content) {
+      if (content) {
         // 本文あり → クリックでアコーディオン展開
         return '<li class="nb-news-item nb-expandable">' +
           '<div class="nb-news-header">' + thumb + meta + '<span class="nb-news-toggle">▼</span></div>' +
@@ -1727,15 +1732,12 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       });
     });
 
-    // お知らせが1件以上あれば「すべてのお知らせ」リンクを非表示
-    var more = document.getElementById('nb-news-more');
-    if (more) more.style.display = 'none';
   }
 
   fetch(WORKER_BASE + '/api/news')
-    .then(function(r) { return r.json(); })
+    .then(function(r) { if (!r.ok) throw new Error('News request failed'); return r.json(); })
     .then(renderNews)
-    .catch(function() {});
+    .catch(function() { showNewsMessage('お知らせを読み込めませんでした。'); });
 })();
 
 </script>

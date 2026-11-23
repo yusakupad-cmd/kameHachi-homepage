@@ -263,7 +263,7 @@ async function handleNotionNews(env) {
     // upstream障害時はD1キャッシュから返すフォールバック
     console.error('[kame-social-feed] /api/news upstream fetch failed:', e?.message ?? String(e));
     const { results } = await env.DB.prepare(
-      'SELECT notion_id, title, date, category, notion_url, cover_url FROM notion_news ORDER BY date DESC LIMIT 5'
+      "SELECT notion_id, title, date, category, '' AS notion_url, '' AS cover_url FROM notion_news ORDER BY date DESC LIMIT 5"
     ).all();
     return new Response(JSON.stringify(results ?? []), { headers: CORS_HEADERS });
   }
