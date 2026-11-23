@@ -69,7 +69,7 @@
         "name": "体験利用はできますか？",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "はい、体験利用が可能です。まずはお電話またはお問い合わせフォームよりご連絡ください。スタッフが丁寧にご案内いたします。"
+          "text": "はい、体験利用が可能です。まずはお電話またはLINEよりご連絡ください。スタッフが丁寧にご案内いたします。"
         }
       },
       {
@@ -101,7 +101,7 @@
         "name": "見学はできますか？",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "はい、随時見学を受け付けています。ご家族の方もぜひご一緒にお越しください。事前にお電話またはお問い合わせフォームにてご予約をお願いします。"
+          "text": "はい、随時見学を受け付けています。ご家族の方もぜひご一緒にお越しください。事前にお電話またはLINEでご予約をお願いします。"
         }
       },
       {
@@ -774,6 +774,7 @@ a.insta-cell:hover img { transform: scale(1.05); }
   text-decoration: none; color: inherit;
 }
 .nb-news-item:last-child { border-bottom: none; }
+.nb-news-empty { color: var(--text-md); font-size: 16px; line-height: 1.8; }
 .nb-news-link { display: flex; align-items: center; gap: 14px; flex: 1; text-decoration: none; color: inherit; cursor: pointer; }
 .nb-news-link:hover .nb-news-title { text-decoration: underline; }
 .nb-news-thumb {
@@ -910,50 +911,16 @@ details[open] .faq-q-arrow { transform: rotate(180deg); }
   min-width: 300px; text-align: center;
 }
 .btn-form-sub:hover { background: rgba(160,120,80,0.08); }
+.btn-form-line, .btn-form-sub { min-height: 80px; }
 
-/* ── 見学予約フォーム ──────────────────────────────────────────────── */
-.visit-form-wrap {
-  background: rgba(74,103,65,.06); border: 1px solid rgba(74,103,65,.15);
-  border-radius: 12px; padding: 28px 28px 24px; margin-bottom: 24px;
+.contact-guidance {
+  margin: 0 auto 24px; max-width: 680px; text-align: center;
+  font-size: 17px; line-height: 1.9; color: var(--text-md);
 }
-.visit-form-title {
-  font-size: 20px; font-weight: 600; color: var(--text-dk);
-  letter-spacing: 0.1em; margin-bottom: 18px; text-align: center;
+.contact-media {
+  margin-top: 18px; text-align: center;
+  font-size: 15px; line-height: 1.8; color: var(--text-md);
 }
-.visit-form-row { margin-bottom: 14px; }
-.visit-form-row label {
-  display: block; font-size: 16px; font-weight: 500;
-  color: var(--text-md); margin-bottom: 5px; letter-spacing: 0.06em;
-}
-.visit-form-row .req {
-  display: inline-block; background: var(--green); color: #fff;
-  font-size: 12px; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle;
-}
-.visit-form-row input,
-.visit-form-row textarea {
-  width: 100%; padding: 11px 14px; font-size: 18px;
-  border: 1px solid rgba(160,128,96,.3); border-radius: 8px;
-  background: rgba(255,255,255,.8); color: var(--text-dk);
-  font-family: inherit; line-height: 1.6; box-sizing: border-box;
-  transition: border-color 0.2s;
-}
-.visit-form-row input:focus,
-.visit-form-row textarea:focus {
-  outline: none; border-color: var(--green);
-}
-.visit-form-row textarea { resize: vertical; min-height: 90px; }
-.visit-form-submit {
-  display: block; width: 100%; padding: 14px;
-  background: var(--green); color: var(--white); border: none;
-  border-radius: var(--radius-btn); font-size: 19px; font-weight: 500;
-  letter-spacing: 0.12em; cursor: pointer; font-family: inherit;
-  transition: background 0.2s, transform 0.15s;
-}
-.visit-form-submit:hover { background: var(--brown); transform: translateY(-1px); }
-.visit-form-submit:disabled { opacity: 0.6; pointer-events: none; }
-.visit-form-msg { text-align: center; font-size: 17px; padding: 12px 0; }
-.visit-form-msg.success { color: var(--green); }
-.visit-form-msg.error   { color: #c0392b; }
 
 /* ══ FOOTER ══ */
 footer { background: #3A2D22; padding: 36px 48px 24px; }
@@ -1302,7 +1269,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
     <div class="deco-title">
       <span class="deco-mark">✦</span>
       <h2>お知らせ</h2>
-      <span class="sub-ja">Notionで更新 · 最新情報をお届けします</span>
+      <span class="sub-ja">亀八茶屋からの最新情報をお届けします</span>
     </div>
     <ul id="nb-news-list" class="nb-news-list">
       <li class="nb-news-item">
@@ -1321,7 +1288,6 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
         <span class="nb-skel-line" style="flex:1"></span>
       </li>
     </ul>
-    <a class="nb-more" id="nb-news-more" href="https://zest-meadowlark-170.notion.site/f3ddd492f8b646359663bdff8458b915?v=d81529643e274ebe951fdad5624f5883" target="_blank" rel="noopener">すべてのお知らせ →</a>
   </div>
 </section>
 
@@ -1465,7 +1431,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
         </summary>
         <div class="faq-a">
           <span class="faq-a-mark">A</span>
-          <span>はい、体験利用が可能です。まずはお電話またはお問い合わせフォームよりご連絡ください。スタッフが丁寧にご案内いたします。</span>
+          <span>はい、体験利用が可能です。まずはお電話またはLINEよりご連絡ください。スタッフが丁寧にご案内いたします。</span>
         </div>
       </details>
 
@@ -1513,7 +1479,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
         </summary>
         <div class="faq-a">
           <span class="faq-a-mark">A</span>
-          <span>はい、随時見学を受け付けています。ご家族の方もぜひご一緒にお越しください。事前にお電話またはお問い合わせフォームにてご予約をお願いします。</span>
+          <span>はい、随時見学を受け付けています。ご家族の方もぜひご一緒にお越しください。事前にお電話またはLINEでご予約をお願いします。</span>
         </div>
       </details>
 
@@ -1572,39 +1538,15 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       <p>〒421-1114<br>静岡県藤枝市岡部町羽佐間641<br>朝比奈川沿い</p>
       <p><a href="https://www.google.com/maps/search/?api=1&amp;query=静岡県藤枝市岡部町羽佐間641" target="_blank" rel="noopener">Googleマップで見る ›</a></p>
     </div>
-    <!-- 見学予約フォーム -->
-    <div class="visit-form-wrap" id="visit-form">
-      <p class="visit-form-title">見学・体験のお申し込み</p>
-      <form id="kame-visit-form" novalidate>
-        <input type="hidden" name="line_account_id" value="67c308f4-1398-417d-be91-e4b7c5a58851">
-        <div class="visit-form-row">
-          <label for="vf-name">お名前<span class="req">必須</span></label>
-          <input type="text" id="vf-name" name="visitor_name" placeholder="例：山田 太郎" required>
-        </div>
-        <div class="visit-form-row">
-          <label for="vf-phone">電話番号<span class="req">必須</span></label>
-          <input type="tel" id="vf-phone" name="visitor_phone" placeholder="例：090-0000-0000" required>
-        </div>
-        <div class="visit-form-row">
-          <label for="vf-date">ご希望日時</label>
-          <input type="text" id="vf-date" name="preferred_date" placeholder="例：7月中旬の午後">
-        </div>
-        <div class="visit-form-row">
-          <label for="vf-msg">ご質問・ご要望</label>
-          <textarea id="vf-msg" name="message" placeholder="お気軽にどうぞ"></textarea>
-        </div>
-        <div id="kame-visit-msg" class="visit-form-msg" style="display:none"></div>
-        <button type="submit" class="visit-form-submit">送信する</button>
-      </form>
-    </div>
-
+    <p class="contact-guidance">お問い合わせ、見学・体験のご相談は、お電話またはLINEで受け付けています。</p>
     <div class="contact-btns">
       <a class="btn-form-line" href="https://line.me/R/ti/p/@103ljwgq" target="_blank" rel="noopener">
         <span class="line-chip-round">LINE</span>
-        LINEで見学・体験の予約をする
+        見学・体験を相談する
       </a>
-      <a class="btn-form-sub" href="https://line.me/R/ti/p/@103ljwgq" target="_blank" rel="noopener">取材・メディア掲載のご依頼もLINEから</a>
+      <a class="btn-form-sub" href="tel:0546483030" aria-label="054-648-3030へ電話する">電話で相談する<br><small>054-648-3030</small></a>
     </div>
+    <p class="contact-media">取材・メディア掲載のご依頼も、お電話またはLINEでご連絡ください。</p>
   </div>
 </section>
 
@@ -1627,8 +1569,6 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       <a class="footer-link-chip" href="#">亀八茶屋とは</a>
       <a class="footer-link-chip" href="#">サービス内容</a>
       <a class="footer-link-chip" href="#">1日の流れ</a>
-      <a class="footer-link-chip" href="#">スタッフ紹介</a>
-      <a class="footer-link-chip" href="#">採用情報</a>
       <a class="footer-link-chip" href="#">プライバシーポリシー</a>
     </div>
     <p class="footer-copy">&copy; 2026 NPO法人タートルエイト　デイサービス 亀八茶屋</p>
@@ -1744,12 +1684,22 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
   }
 
   // お知らせ
+  function showNewsMessage(message) {
+    var list = document.getElementById('nb-news-list');
+    if (!list) return;
+    list.innerHTML = '<li class="nb-news-item nb-news-empty">' + message + '</li>';
+  }
+
   function renderNews(items) {
     var list = document.getElementById('nb-news-list');
-    if (!list || !items.length) return;
+    if (!list) return;
+    if (!Array.isArray(items)) throw new Error('Invalid news response');
+    if (!items.length) {
+      showNewsMessage('現在、表示できるお知らせはありません。');
+      return;
+    }
     list.innerHTML = items.slice(0, 5).map(function(item) {
       var cat     = item.category || 'お知らせ';
-      var url     = item.notion_url || '';
       var content = item.content || '';
       var thumb = item.cover_url
         ? '<div class="nb-news-thumb"><img src="' + esc(item.cover_url) + '" alt="" loading="lazy" width="64" height="48"></div>'
@@ -1763,12 +1713,7 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
           '<span class="nb-news-title">' + esc(item.title) + '</span>' +
         '</div>';
 
-      if (url) {
-        // 外部リンクあり → 従来通りリンク
-        return '<li class="nb-news-item">' +
-          '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="nb-news-link">' + thumb + meta + '</a>' +
-          '</li>';
-      } else if (content) {
+      if (content) {
         // 本文あり → クリックでアコーディオン展開
         return '<li class="nb-news-item nb-expandable">' +
           '<div class="nb-news-header">' + thumb + meta + '<span class="nb-news-toggle">▼</span></div>' +
@@ -1787,66 +1732,12 @@ footer { background: #3A2D22; padding: 36px 48px 24px; }
       });
     });
 
-    // お知らせが1件以上あれば「すべてのお知らせ」リンクを非表示
-    var more = document.getElementById('nb-news-more');
-    if (more) more.style.display = 'none';
   }
 
   fetch(WORKER_BASE + '/api/news')
-    .then(function(r) { return r.json(); })
+    .then(function(r) { if (!r.ok) throw new Error('News request failed'); return r.json(); })
     .then(renderNews)
-    .catch(function() {});
-})();
-
-// ── 見学予約フォーム送信 ──────────────────────────────────────────────
-(function() {
-  var API = 'https://line-harness.kizuku-lab.workers.dev/api/visit-requests/hp-submit';
-
-  var form = document.getElementById('kame-visit-form');
-  if (!form) return;
-
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    var btn = form.querySelector('.visit-form-submit');
-    var msg = document.getElementById('kame-visit-msg');
-
-    var name  = form.querySelector('[name="visitor_name"]').value.trim();
-    var phone = form.querySelector('[name="visitor_phone"]').value.trim();
-    if (!name || !phone) {
-      msg.textContent = 'お名前と電話番号は必須です。';
-      msg.className = 'visit-form-msg error';
-      msg.style.display = 'block';
-      return;
-    }
-
-    var data = {};
-    new FormData(form).forEach(function(v, k) { if (v) data[k] = v; });
-
-    btn.disabled = true;
-    btn.textContent = '送信中…';
-    msg.style.display = 'none';
-
-    fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-      .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
-      .then(function() {
-        msg.textContent = 'お申し込みありがとうございます！担当者よりご連絡いたします。';
-        msg.className = 'visit-form-msg success';
-        msg.style.display = 'block';
-        form.reset();
-        btn.textContent = '送信しました';
-      })
-      .catch(function() {
-        msg.textContent = '送信に失敗しました。お電話またはLINEよりお問い合わせください。';
-        msg.className = 'visit-form-msg error';
-        msg.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = '送信する';
-      });
-  });
+    .catch(function() { showNewsMessage('お知らせを読み込めませんでした。'); });
 })();
 
 </script>
